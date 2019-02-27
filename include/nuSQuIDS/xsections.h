@@ -225,6 +225,9 @@ class NeutrinoDISCrossSectionsFromTables : public NeutrinoCrossSections {
       /// \param basePath the base path name for the output files;
       ///                 suffixes will be automatically appended.
       void WriteText(std::string basePath) const;
+
+      /// \brief Get raw data energy nodes (logE_data_range, unit is log(E/eV))
+      std::vector<double> GetLogERawDataEnergyNodes() { return logE_data_range; }
 };
 
 /// \class NeutrinoGRCrossSection
