@@ -118,10 +118,10 @@ Universitat de Barcelona, Diagonal 647, E-08028 Barcelona, Spain}
 \begin{abstract}
 The Neutrino Simple Quantum Integro-Differential Solver ($\nu$-SQuIDS)
 is a C++ code based on SQuIDS that propagates an ensemble of neutrinos
-through a given media. Neutrino oscillation calculations relevant to
-current and next generation experiments are implemented. In doing so
-we account for coherent and non-coherent neutrino interactions in
-different media such as the Sun, Earth, Vacuum, or others.
+through given media. Neutrino oscillation calculations relevant to
+current and next generation experiments are implemented. 
+This includes coherent and non-coherent neutrino interactions in
+settings such as the Sun, Earth, vacuum, and others.
 The code is designed to be accurate and flexible, while at the
 same time maintaining good performance. It has a modular design that
 allows the user to incorporate new physics in novel scenarios. 
@@ -149,7 +149,7 @@ accelerator~\citep{PhysRevLett.112.181801,
   PhysRevD.93.051104,PhysRevLett.116.151806, PhysRevLett.110.251801}, and
 reactor \citep{An:2013zwz,Abe:2015rcp, Kim:2016yvm} experiments.
 Thanks to these remarkable
-experimental results and related theoretical calculations the
+experimental results and related theoretical calculations, the
   neutrino-mass induced flavor oscillation paradigm
 \citep{Pontecorvo:1967fh,Gribov:1968kq,fukugita2003physics,
   Akhmedov:1999uz,Balantekin:2013kc, GonzalezGarcia:2007ib,Mohapatra:qv, Gouvea:2013fj}
@@ -187,7 +187,7 @@ Also, the interplay between cosmology and neutrino
 oscillation has been widely studied in the literature
 \citep{Bergstrom:2014fqa, Giusarma:2016phn,
   Dasgupta:2013la,Hernandez:2016kel,Arguelles:2016uwb,Song:2018zyl,Chu:2018gxk}. 
-In conclusion, neutrinos are good probes to perform 
+Generally, neutrinos are good probes to perform 
 fundamental physics tests~\citep{Hewett:2012et,Aartsen:2017ibm,Mewes:2018cze,Barenboim:2017vlc}.
 
 Tools are needed to accurately and reliably compute neutrino
@@ -213,6 +213,7 @@ we describe the library {\ttf Python} interface. Finally, section
 \ref{sec:conclu} presents concluding remarks.
 
 \section{Neutrino Oscillations}
+\subsection{Density Matrix Formalism}
 \label{sec:theory} 
 In this section we briefly review neutrino oscillations
 using the density matrix formalism.
@@ -241,7 +242,7 @@ R_{34} R_{24} R_{14} R_{23} R_{13} R_{12},
 \end{equation}
 determined by angles, $\{\theta_{ij}\}$, and phases, $\{ \delta_{ij}
 \}$~\cite{SQUIDS}. When considering the standard three flavor paradigm
-the following parametrization is often used
+the following parametrization is often used:
 \begin{equation}
 U
 =
@@ -254,22 +255,22 @@ s_{12}s_{23} -c_{12}c_{23}s_{13}e^{i\delta_{13}} & - c_{12} s_{23} - s_{12} c_{2
 \label{eq:U}
 \end{equation}
 where $c_{ij} \equiv \cos \theta_{ij}$, $s_{ij} \equiv \sin \theta_{ij}$. In the
-three flavor scenario we use the aforementioned parametrization (with
+three flavor scenario we use this parametrization (with
 values from \citep{Esteban:2016qun} by default).
 The neutrino ensemble propagation is
-described by the following quantum Von Neumann equation \footnote{We set $c = \hbar = 1$.} 
+described by the following quantum Von Neumann equation \footnote{Where we have set $c = \hbar = 1$.} 
 \begin{equation}
 \pa{\rho(E,x)}{x} = -i [ H (E,x), \rho(E,x) ].
 \label{eq:schrodinger}
 \end{equation}
 
-In general, we can always split the Hamiltonian, $H$, into
+In general, the Hamiltonian, $H$, can always be split into
 time-dependent and time-independent parts. For neutrino oscillations
-the following splitting is convenient,
+the following splitting is convenient:
 \begin{equation}
 H(E,x) = H_0(E)  + H_{1}(E,x) ,
 \end{equation}
-with,
+with
 \begin{subequations}
 \label{eq:hamiltonian}
 \begin{align}
@@ -278,16 +279,16 @@ H_1 (E,x) &= \sqrt{2} G_F U^\dagger {\rm diag} ( N_e(x) -
 N_{nuc}(x)/2, -N_{nuc}(x)/2, -N_{nuc}(x)/2 , 0,...,0 )U ,\label{eq:hi} 
 \end{align}
 \end{subequations}
-where $n$ is the number of neutrino states; $G_F$ is the Fermi
-constant; $N_e(x)$ and $N_{nuc}(x)$ are the electron and nucleon number
-densities at position $x$; and $\Delta m^2_{i1}$ are the neutrino mass
+where $n$ is the number of neutrino states, $G_F$ is the Fermi
+constant, $N_e(x)$ and $N_{nuc}(x)$ are the electron and nucleon number
+densities at position $x$, and $\Delta m^2_{i1}$ are the neutrino mass
 square differences.
 In writing these equations we have used the convention that the first
-three flavor eigenstates corresponds to 
-$\nu_e$, $\nu_\mu$, and $\nu_\tau$, while the rest are assumed to be
+three flavor eigenstates correspond to 
+$\nu_e$, $\nu_\mu$, and $\nu_\tau$ respectively, while the rest are assumed to be
 sterile neutrinos. $H_0$ arises from the neutrino kinetic
 term, whereas $H_1$ incorporates the matter potential induced by coherent
-forward scattering~\citep{Mikheev:1986gs,Mikheev:1986wj,Wolfenstein:1977ue}. Notice that the matter
+forward scattering~\citep{Mikheev:1986gs,Mikheev:1986wj,Wolfenstein:1977ue}. Note that the matter
 potential, $H_1$, given in \eqref{eq:hi} for neutrinos changes to
 $-H_1^*$ for antineutrinos. 
 Since the propagation due to $H_0$ can be solved analytically, it is
@@ -305,7 +306,7 @@ The corresponding evolution equation  for the neutrino state is
 
 So far we have only incorporated vacuum oscillations and matter
 effects through coherent interactions, but we now wish to extend this
-formalism to incorporate noncoherent interactions and collective
+formalism to incorporate non-coherent interactions and collective
 neutrino behavior. In what follows we will remove the subindex $I$ and
 assume that all operators, unless specified, are in the interaction picture. 
 This problem has been extensively discussed in the literature,
@@ -324,7 +325,7 @@ The neutrino (antineutrino), $\rho$ $(\bar\rho)$, kinetic equations are
 \end{eqnarray}
 \end{subequations}
 where $\Gamma$ and $\bar\Gamma$  are functions that incorporate the effect of attenuation due to
-noncoherent interactions, and $F$ and $\bar F$  are  functionals on
+non-coherent interactions, and $F$ and $\bar F$  are  functionals on
 $\rho$ and $\bar\rho$ that take into account interactions between
 different energies for neutrinos and antineutrinos.
 
@@ -347,7 +348,7 @@ $\bar\lambda^e_{\rm GR}$ is the mean free path due to the Glashow
 resonance $(N_{e}(x)\sigma^e_{\rm GR}(E))^{-1}$~\citep{Gandhi:1998ri}. Notice that we assume
 the matter only contains electrons, protons, and neutrons,
 i.e. $\bar\lambda^\mu_{\rm GR}=\bar\lambda^\tau_{\rm GR}=0$.
-The other interaction terms are as follows
+The other interaction terms are as follows:
 \begin{subequations}
   \begin{eqnarray}
     F\left[\rho,\bar\rho;E,x\right] &=& \sum_\alpha \Pi_\alpha(E,x)  \int_E^\infty  
@@ -442,12 +443,66 @@ terms couple the propagation of neutrinos and antineutrinos.
 Finally, the last term in \eqref{eq:antiFterm} accounts for the
 neutrinos produced in the Glashow resonance due to $W^-$ decay.
 
+These equations are implemented by discretizing the problem in bins that the user
+specifies. The user should be aware that the discretization used can introduce errors due to
+bin spill-over. Special care should be taken for hard spectrums,
+{\it e.g.} $\phi(E_\nu) = E^{-1}$, where this maybe more relevant and the user is encouraged
+to check the effect of discretization by modifying the energy nodes spacing and cross sections granularity.
+
+\subsection{Fast Oscillations Approximation}
+
+In the regime where the oscillation frequencies are too large to be
+resolved by the energy resolution of a detector, the oscillation length is much
+shorter that the production region of the propagated neutrinos, or the
+traveled distance is large enough to produce the physical separation
+of the different mass eigenstates, the oscillations due to the quantum
+interference vanish.
+
+In order to implement the evaluation of the vacuum oscillations in
+this regime a generalized functions for the analytic evolution are included in
+the SQuIDS~\cite{SQUIDS} versions 1.2 and later. 
+A low-level generalized version of the function {\ttf PrepareEvolve} is included:
+
+\begin{lstlisting}[frame=leftline, numbers = left,breaklines=true, label = ex:sin1,firstnumber=last]
+  void PrepareEvolve(double* buffer, double t, double scale, std::vector<bool>& avr) const
+\end{lstlisting}
+where {\ttf buffer}  will contain all of the pre-evaluated
+trigonometric functions needed to evaluate the evolution give by the {\ttf 
+SU\_vector} to be used by any {\ttf Evolve()} function. 
+For frequencies, given by difference of the eigenvalues, 
+larger that the value given by {\ttf scale} the trigonometric evaluations are set to zero. 
+The time over which the evolution is to be evaluated is {\ttf double t} and the {\ttf avr} 
+vector is treated as an output parameter; its elements are set to
+{\ttf true} when the corresponding frequency is set to zero due to the fast
+oscillation approximation.
+
+A set of higher level functions to evaluate the expectation values of
+the system in this approximations are also added:
+
+\begin{lstlisting}[frame=leftline, numbers = left,breaklines=true, label = ex:sin1,firstnumber=last]
+double GetExpectationValue(SU_vector op, unsigned int nrh, unsigned int i, double scale, std::vector<bool>& avr) const;
+double GetExpectationValueD(const SU_vector& op, unsigned int nrh, double x, double scale, std::vector<bool>& avr) const;
+\end{lstlisting}
+
+where the two extra arguments, {\ttf scale} and {\ttf avr}, are included with the same meanings as in the generalized {\ttf PrepareEvolve}.
+In section~\ref{sec:code} the functions to evaluate the the expectation values for the neutrinos, {\ttf EvalFlavor} in
+{\ttf nuSQuIDS}, are described in detail. 
+
+Besides using this approximation in the evaluation, essentially to set the states
+from the interaction picture to the real picture, these approximate functions can be also used to compute the right hand side
+terms of the differential equation when the oscillations are much
+faster than the time scales of a given numerical system. This can be
+understood as the leading order of the Magnus expansion~\cite{Magnus:1954zz} and can
+speed up numerical calculations dramatically in some concrete physics setups
+such as oscillations in the early universe~\cite{Hernandez:2016kel}. 
+
+
 \section{Examples}
 \label{sec:examples}
-To help the user use the library in concrete scenarios we provide
+To illustrate use of the library in concrete scenarios we provide
 a set of examples. These examples are located in different sub-folders inside a folder
 called {\ttf examples}. A specific example can be compiled using the
-makefile by running {\ttf make examples example\_name}, omitting the
+makefile by running {\ttf make examples example\_name}, and omitting the
 name compiles all the examples. 
 Some of the examples contain a {\ttf Gnuplot} script to plot the output file.
 
@@ -457,20 +512,19 @@ This example illustrates the use of the simplified mode to compute the
 propagation of the neutrinos for a single energy. 
 
 In the following we will go though the main file of the example.
-First we construct the nusquids object using the signature that
-requires only the number of flavors and to specify if it's type is
-neutrino or antineutrino.
+First, we construct the nuSQuIDS object using the signature that
+requires only the number of flavors and specification of the use of
+neutrinos or antineutrinos.
 
 \begin{lstlisting}[frame=leftline, numbers = left,breaklines=true, label = ex:sin1]
   nuSQUIDS nus(3,neutrino);
 \end{lstlisting}
 
-In the following function we set the value of the oscillation parameters, we put
-the value for the mixing angles in radians, the value for the mass
-square difference in electron-volt squared and a value for the CP
+We next set the value of the oscillation parameters, giving the values for the mixing angles in radians, the value for the mass
+square difference in electron-volt squared, and a value for the CP
 phase in radians.
 In order to do so we use the {\ttf Set\_MixingAngle} member function
-whose first two arguments are the indices of the rotation  starting
+whose first two arguments are the indices of the rotation, starting
 from zero. Similarly for the CP phase function.
 In the case of the square mass difference, the first argument of the function is
 the mass eigenvalue index and the second argument the value. These
@@ -498,15 +552,11 @@ This line sets the energy of the neutrino to be propagated.
   nus.Set_E(10.0*units.GeV);
 \end{lstlisting}
 
-In these lines we define the medium in which we are going to propagate
-the neutrino. In this example we will use the Earth and specify the
-path by the zenith angle, see~\ref{sec:body} for more details.
-
-These are separate objects in the code, in this example we construct
-an atmospheric Earth object, {\ttf earth\_atm}, which contains the
-Earth geometry and density. We also construct a trajectory in the
-earth for a zenith angle {\ttf phi}, {\ttf earth\_atm\_track}. Finally
-we set these objects to nuSQuIDS.
+Next, we define the medium in which we are going to propagate the neutrinos. 
+The atmospheric Earth object used here, {\ttf earth\_atm}, contains the
+geometry and density of the Earth, including a simple treatment of the atmosphere; see~\ref{sec:body} for more details. We also construct a trajectory in the
+earth for a zenith angle {\ttf phi}, {\ttf earth\_atm\_track}. Finally,
+we apply these objects to the nuSQuIDS object.
 
 \begin{lstlisting}[frame=leftline, numbers = left,breaklines=true, label = ex:sin1,firstnumber=last]
   double phi = acos(-1.0);
@@ -517,11 +567,10 @@ we set these objects to nuSQuIDS.
   nus.Set_Track(earth_atm_track);
 \end{lstlisting}
 
-Now we set the initial neutrino flavor. In this example we start with
-a muon neutrino represented by an {\ttf marray} of length {\ttf
+Now we set the initial neutrino flavor composition. In this example we start with
+a muon neutrino, which we represent represented by an {\ttf marray} of rank 1 and length {\ttf
   \{3\}}, corresponding to the number of flavors, and with value given
 by {\ttf\{0,1,0\}}.
-
 
 \begin{lstlisting}[frame=leftline, numbers = left,breaklines=true, label = ex:sin1,firstnumber=last]
   marray<double,1> ini_state({3},{0,1,0});
@@ -540,11 +589,11 @@ Finally we show the result before and after propagation. The
 propagation is done by calling the function {\ttf nus.EvolveState()}
 
 \begin{lstlisting}[frame=leftline, numbers = left,breaklines=true, label = ex:sin1,firstnumber=last]
-  std::cout << ``In state'' << std::endl;
+  std::cout << "In state" << std::endl;
   for (double EE : nus.GetERange()){
-    std::cout << EE/units.GeV << `` ``;
+    std::cout << EE/units.GeV << " ";
     for(int i = 0; i < 3; i++){
-      std::cout << nus.EvalFlavor(i) << `` ``;
+      std::cout << nus.EvalFlavor(i) << " ";
     }
     std::cout << std::endl;
   }
@@ -552,11 +601,11 @@ propagation is done by calling the function {\ttf nus.EvolveState()}
   nus.EvolveState();
   
   // Output the result                                                                                 
-  std::cout << ``Out state'' << std::endl;
+  std::cout << "Out state" << std::endl;
   for (double EE : nus.GetERange()){
-    std::cout << EE/units.GeV << `` ``;
+    std::cout << EE/units.GeV << " ";
     for(int i = 0; i < 3; i++){
-      std::cout << nus.EvalFlavor(i) << `` ``;
+      std::cout << nus.EvalFlavor(i) << " ";
     }
     std::cout << std::endl;
   }
@@ -1050,7 +1099,6 @@ linear in the outgoing neutrino energy; see implementation in {\ttf
   exCross.cpp}. We also allow to change the proportion of charge-to-neutral
   current at the construction of the object.
 
-
 We construct two cross section objects: one with only charge current  interactions
 {\ttf ncs\_cc} and another with only neutral current {\ttf
   ncs\_nc}. Then we construct the corresponding nuSQuIDS objects {\ttf nus\_cc} and {\ttf nus\_nc}.
@@ -1068,7 +1116,6 @@ option {\ttf Set\_IncludeOscillations(false)}.
   nus_nc.Set_IncludeOscillations(false);
 \end{lstlisting}
 
-
 We can see the final to initial flux ratios for both cases in fig~\ref{fig:crossext}.
 
 \begin{figure}[h!]
@@ -1079,7 +1126,6 @@ We can see the final to initial flux ratios for both cases in fig~\ref{fig:cross
     of the neutrino energy for the example toy cross sections with
     only charged current and only neutral current.} 
 \end{figure}
-
 
 \subsection{Constant density multiple layers \textnormal{({\ttf
       examples/Constant\_density\_layers})}}
@@ -3283,6 +3329,7 @@ Thus we just need to specify the number of neutrinos (3) and if we are dealing w
 \begin{lstlisting}[language=Python, breaklines=true]
 nuSQ = nsq.nuSQUIDS(3,nsq.NeutrinoType.neutrino)
 \end{lstlisting}
+<<<<<<< HEAD
 
 nuSQuIDS inputs should be given in natural units.
 In order to make this convenient, as in the {\ttf C++} code, we make use of the {\ttf SQuIDS} class {\ttf Const}.
@@ -3491,6 +3538,216 @@ energy_nodes = nsq.logspace(E_min,E_max,E_nodes)
 
 neutrino_flavors = 3
 
+=======
+
+nuSQuIDS inputs should be given in natural units.
+In order to make this convenient, as in the {\ttf C++} code, we make use of the {\ttf SQuIDS} class {\ttf Const}.
+We can instantiate it as follows
+\begin{lstlisting}[language=Python, breaklines=true]
+units = nsq.Const()
+\end{lstlisting}
+
+As in the {\ttf C++} $\nu$-SQuIDS interface one can propagate the neutrinos in various environments
+(see~\ref{sec:body} for further details). We can start by considering oscillactions in vacuum by setting:
+\begin{lstlisting}[language=Python, breaklines=true]
+nuSQ.Set_Body(nsq.Vacuum())
+\end{lstlisting}
+
+Since we have to specify that we are considering vacuum propagation, 
+we must construct a trajectory inside that object. This can be done using the {\ttf Track} class-property of a given {\ttf Body}.
+Each {\ttf Body} will have its own {\ttf Track} subclass and its constructors. We can set and construct a vacuum trajectory in the following way:
+\begin{lstlisting}[language=Python, breaklines=true]
+nuSQ.Set_Track(nsq.Vacuum.Track(100.0*units.km))
+\end{lstlisting}
+
+Next we have to set the neutrino energy, which can be done as follows
+\begin{lstlisting}[language=Python, breaklines=true]
+nuSQ.Set_E(1.0*units.GeV)
+\end{lstlisting}
+
+Now we have to set the initial neutrino state. We can provide this state in either the flavor or mass basis.
+We can do this using the {\ttf Set\_initial\_state} function, providing it with a numpy array and a {\ttf nsq.Basis}.
+If the basis is {\ttf nsq.Basis.flavor} then the list must contain {\ttf np.array([}$\phi_e$,$\phi_\mu$,$\phi_\tau${\ttf ])}, 
+similarly if enumeration is {\ttf nsq.Basis.mass} the list must specify $\phi_i$.
+In this example we set the initial state to $\nu_\mu$,
+\begin{lstlisting}[language=Python, breaklines=true]
+nuSQ.Set_initial_state(np.array([0.,1.,0.]),nsq.Basis.flavor)
+\end{lstlisting}
+
+Finally, we calculate the system evolution by
+\begin{lstlisting}[language=Python, breaklines=true]
+nuSQ.EvolveState()
+\end{lstlisting}
+
+After this runs, {\ttf nuSQuIDS} has evolved the state and holds it in memory.
+We can inquire for the flavor composition at this stage by
+\begin{lstlisting}[language=Python, breaklines=true]yy
+print([nuSQ.EvalFlavor(i) for i in range(3)])
+\end{lstlisting}
+
+which results in
+\begin{lstlisting}[language=Python, breaklines=true]yy
+[0.004675502573140013, 0.9022064087866011, 0.09311808864025879]
+\end{lstlisting}
+
+$\nu$-SQuIDS knows everything about the neutrino state at the current moment, it also knows what we did with it so far, where it went, what mixing parameters were used, etc. It would be convenient to store this information. One way of doing this is to serialize the $\nu$-SQuIDS status. We can do this in the following way
+\begin{lstlisting}[language=Python, breaklines=true]
+nuSQ.WriteStateHDF5("current_state.hdf5")
+\end{lstlisting}
+
+Everything that is in the $\nu$-SQuIDS object is now in that file. We can use that file to create a new $\nu$-SQuIDS object and do another calculation, we can stop the calculation midway and use it to restart, we can explore that file with other analysis tools, etc. In particular, the `ReadStateHDF5` will return us to the given configuration.
+\begin{lstlisting}[language=Python, breaklines=true]
+nuSQ.ReadStateHDF5("current_state.hdf5")
+\end{lstlisting}
+
+We can use the current tool to try to calculate $P(\nu_\mu \to \nu_e)$ as a function of energy. We can do the following
+\begin{lstlisting}[language=Python, frame=leftline, numbers=left, breaklines=true]
+energy_values = np.linspace(1,10,40)
+nu_mu_to_nu_e = []
+for Enu in energy_values:
+    nuSQ.Set_E(Enu*units.GeV)
+    nuSQ.Set_initial_state(np.array([0.,1.,0.]),nsq.Basis.flavor)
+    nuSQ.EvolveState()
+    nu_mu_to_nu_e.append(nuSQ.EvalFlavor(0))
+
+plt.figure(figsize = (8,6))
+plt.xlabel(r"$E_\nu [{\rm GeV}]$")
+plt.ylabel(r"$P(\nu_\mu \to \nu_e)$")
+plt.plot(energy_values,nu_mu_to_nu_e, lw = 2, color = 'blue')
+\end{lstlisting}
+This results in the plot shown in Figure~\ref{fig:nusquids_python_osc} left panel.
+\begin{figure}[h!]
+  \label{fig:nusquids_python_osc}
+  \centering
+  \includegraphics[width=0.45\textwidth]{fig/nusquids_python_osc_std.eps}
+  \includegraphics[width=0.45\textwidth]{fig/nusquids_python_osc_nonstd.eps}
+  \caption{Muon-neutrino to electron neutrino oscillation probability in vacuum as a function of the neutrino energy for a baseline of 100 km. 
+  The left panel is for the default standard oscillation parameters and the right panel has $\Delta m^2_{21}$ set to $1~{\rm eV}^2$}
+\end{figure}
+
+nuSQuIDs has some predefined oscillation mixing angles ($\theta_{ij}$) and mass splittings ($\Delta m^2_{ij}$),
+which we have taken from~\cite{nufit}.
+We can change the square mass differences by using the following function
+\begin{lstlisting}[language=Python, breaklines=true]
+nuSQ.Set_SquareMassDifference(1,2.0e-1) # sets dm^2_{21} in eV^2.
+\end{lstlisting}
+
+Running the same script again results in the plot shown in Fig.~\ref{fig:nusquids_python_osc} right panel.
+
+We can also try to modify the mixing angles, for example
+\begin{lstlisting}[language=Python, breaklines=true]
+nuSQ.Set_MixingAngle(0,1,1.2) # sets \theta_{12} in radians.
+nuSQ.Set_MixingAngle(0,2,0.3) # sets \theta_{23}} in radians.
+nuSQ.Set_MixingAngle(1,2,0.4) # sets \theta_{23}} in radians.
+\end{lstlisting}
+We can also restore the default mixing angles and mass differences to default by doing
+\begin{lstlisting}[language=Python, breaklines=true]
+nuSQ.Set_MixingParametersToDefault()
+\end{lstlisting}
+
+\subsubsection{Multiple-energy mode}
+
+In this section we will demonstrate the use of {\ttf nuSQuIDS} in the multiple energy mode.
+To begin we have to specify the $\{E_i\}$ grid where the equation will be solved.
+The energy nodes can be an arbitrary ordered list of energy in eV.
+The most common choice is to have linearly-spaced nodes or logarithmically-spaced nodes.
+For constructing numpy array of linear and logarithmic scales nuSQuIDS provides two
+ convenient functions called {\ttf linspace} and {\ttf logspace }respectively. The 
+following lines define the energy grid and construct the nuSQUIDS object.
+
+\begin{lstlisting}[language=Python, frame=leftline, numbers=left, breaklines=true]
+interactions = False
+
+E_min = 1.0*units.GeV
+E_max = 10.0*units.GeV
+E_nodes = 101
+
+energy_nodes = nsq.logspace(E_min,E_max,E_nodes)
+
+neutrino_flavors = 3
+
+nuSQ = nsq.nuSQUIDS(energy_nodes,neutrino_flavors,nsq.NeutrinoType.neutrino,interactions)
+\end{lstlisting}
+
+We can propagate a neutrino ensemble through the Earth in an atmospheric neutrino telescope setting.
+We can do that by setting the following Body and Track:
+
+\begin{lstlisting}[language=Python, frame=leftline, numbers=left, breaklines=true]
+nuSQ.Set_Body(nsq.EarthAtm())
+nuSQ.Set_Track(nsq.EarthAtm.Track(np.arccos(-1)))
+\end{lstlisting}
+
+For the initial flux we will assume that it's given by $\phi_\nu = N_0 E^{-2}$,
+with flavor composition $\phi_e:\phi_\mu:\phi_\tau$ = $0:1:0$.
+$\nu$-SQuIDS input flux is a {\ttf numpy.ndarray} formatted in the following way:
+\begin{equation}
+InputState \doteq [[\phi^1_e,\phi^1_\mu,\phi^1_\tau],...,[\phi^i_e,\phi^i_\mu,\phi^i_\tau],...,[\phi^n_e,\phi^n_\mu,\phi^n_\tau]]
+\end{equation}
+where $i = 1$ to $n$ and $n$ is the number of energy nodes. We can implement this in the following way
+\begin{lstlisting}[language=Python, frame=leftline, numbers=left, breaklines=true]
+N0 = 1.0e18
+Eflux = lambda E: N0*E**-2
+Einitial = (Eflux(nuSQ.GetERange()).reshape((101,1)))*(np.array([0.,1.,0.]).reshape(1,3))
+\end{lstlisting}
+where {\ttf N0} is an arbitrary normalization constant, but we have chosen it such that the input flux is $O(1)$.
+
+\begin{lstlisting}[language=Python, frame=leftline, numbers=left, breaklines=true]
+nuSQ.Set_initial_state(Einitial,nsq.Basis.flavor)
+
+nuSQ.Set_rel_error(1.0e-17)
+nuSQ.Set_abs_error(1.0e-17)
+
+nuSQ.EvolveState()
+\end{lstlisting}
+
+Then we can evaluate the resulting flux and plot the resulting oscillation 
+probabilities by using the folowing script
+
+\begin{lstlisting}[language=Python, frame=leftline, numbers=left, breaklines=true]
+e_range = np.linspace(1.0,10.0,200)
+
+nu_e = np.array([nuSQ.EvalFlavor(0,EE*units.GeV,0) 
+                           for EE in e_range])
+nu_mu = np.array([nuSQ.EvalFlavor(1,EE*units.GeV,0) 
+                           for EE in e_range])
+nu_tau = np.array([nuSQ.EvalFlavor(2,EE*units.GeV,0) 
+                           for EE in e_range])
+
+total = nu_e + nu_mu + nu_tau
+
+plt.figure(figsize = (8,6))
+
+plt.xlabel(r"$E_\nu [{\rm GeV}]$")
+plt.ylabel(r"$\phi_\alpha$")
+
+plt.plot(e_range,nu_e, lw = 2, color = 'red', label = r"$\nu_e$")
+plt.plot(e_range,nu_mu, lw = 2, color = 'blue', label = r"$\nu_\mu$")
+plt.plot(e_range,nu_tau, lw = 2, color = 'green', label = r"$\nu_\tau$")
+plt.plot(e_range,total, lw = 2, color = 'black', label = r"Total")
+plt.legend(fancybox = True, fontsize = 10)
+plt.semilogy()
+\end{lstlisting}
+The result of this is shown in the left panel of Fig.~\ref{fig:nusquids_atm_python_no_interaction}. Our final example is 
+performing the full nuSQuIDS calculation with neutrinos and antineutrinos, but this time including interactions
+
+\begin{figure}[h!]
+  \label{fig:nusquids_atm_python_no_interaction}
+  \centering
+  \includegraphics[width=\textwidth]{fig/nusquids_atm_python_no_int.eps}
+  \caption{Result of propagating a power-law flux with spectral index of -1 through the Earth considering only oscillations and no interactions.}
+\end{figure}
+
+\begin{lstlisting}[language=Python, frame=leftline, numbers=left, breaklines=true]
+interactions = True
+
+E_min = 1.0e2*units.GeV
+E_max = 1.0e8*units.GeV
+E_nodes = 200
+energy_nodes = nsq.logspace(E_min,E_max,E_nodes)
+
+neutrino_flavors = 3
+
+>>>>>>> c6a8be92b35067939fa5267703c6d8ea03949c30
 nuSQ = nsq.nuSQUIDS(energy_nodes,neutrino_flavors,nsq.NeutrinoType.both,interactions)
 \end{lstlisting}
 In this case we need to specify the neutrino and antineutrino initial fluxes. Those have the following format:
@@ -3557,6 +3814,31 @@ The result of this is shown in Fig.~\ref{fig:nusquids_atm_python_with_interactio
   \includegraphics[width=0.7\textwidth]{fig/nusquids_python_with_interactions_both.eps} 
   \caption{Propagated flux for muon and tau neutrinos through the Earth including the effect of tau regeneration.}
 \end{figure}
+
+\subsection{{\ttf SU\_vector} operations in Python~\label{sec:python_suvector}}
+
+SQuIDS {\ttf SU\_vector} class provides a combinent way to perform operations
+that commonly arise in quantum mechanics. For this reason we have also make them
+available in the {\ttf Python} interface. All of the {\ttf SU\_vector} operations have been implemented,
+but due to optimizations performed in the {\ttf C++} some notes are in order.
+
+We can compute the {\ttf SU\_vector} that represents a typical neutrino Hamiltonian 
+in three flavors as
+\begin{lstlisting}[language=Python, frame=leftline, numbers=left, breaklines=true]
+import nuSQUIDSpy as nsq
+p2=nsq.SU_vector.Projector(3,1)
+dm12=1e-5
+H=p2*dm12
+\end{lstlisting}
+In this code snippet {\ttf p2} is a {\ttf SU\_vector}, but {\ttf H} is a {\ttf SU\_vector::MultiplicationProxy}.
+In the {\ttf C++} implementation these proxies appear when operations are performed on {\ttf SU\_vector} objects
+to optimize memory usage, as described earlier in this document. To keep operating on these objects one needs to 
+cast them onto real {\ttf SU\_vector} rather than proxies for them. This can be done as follows:
+\begin{lstlisting}[language=Python, frame=leftline, numbers=left, breaklines=true]
+H=nsq.SU_vector(H)
+\end{lstlisting}
+after which {\ttf H} is a real vector and can be operated upon. This same conversion needs to be performed explicitly
+every time a proxy is encountered in {\ttf Python}.
 
 \subsection{Extending the interface with user-defined classes~\label{sec:python_extensions}}
 
