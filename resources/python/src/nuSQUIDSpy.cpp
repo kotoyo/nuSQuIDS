@@ -154,7 +154,8 @@ BOOST_PYTHON_MODULE(nuSQUIDSpy)
     .def("IsInit",&NeutrinoDISCrossSectionsFromTables::IsInit)
     .def("WriteHDF",&NeutrinoDISCrossSectionsFromTables::WriteHDF)
     .def("WriteText",&NeutrinoDISCrossSectionsFromTables::WriteText)
-    .def("GetLogERawDataEnergyNodes",&NeutrinoDISCrossSectionsFromTables::GetLogERawDataEnergyNodes)
+    .def("GetLogEEnergyNodes",&NeutrinoDISCrossSectionsFromTables::GetLogEEnergyNodes)
+    .def("GetRawTotalXsec",&NeutrinoDISCrossSectionsFromTables::GetRawTotalXsec)
   ;
 
   class_<TauDecaySpectra, std::shared_ptr<TauDecaySpectra>, boost::noncopyable>("TauDecaySpectra")

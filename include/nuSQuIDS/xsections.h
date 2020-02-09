@@ -226,8 +226,11 @@ class NeutrinoDISCrossSectionsFromTables : public NeutrinoCrossSections {
       ///                 suffixes will be automatically appended.
       void WriteText(std::string basePath) const;
 
-      /// \brief Get raw data energy nodes (logE_data_range, unit is log(E/eV))
-      std::vector<double> GetLogERawDataEnergyNodes() { return logE_data_range; }
+      /// \brief Get energy nodes (logE_data_range, unit is log(E/GeV))
+      std::vector<double> GetLogEEnergyNodes() { return logE_data_range; }
+
+      /// \brief Get raw xsection (logE_data_range, unit is cm2)
+      std::vector<double> GetRawTotalXsec(std::string inttype, int nutypeindex, int flavorindex);
 };
 
 /// \class NeutrinoGRCrossSection

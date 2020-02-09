@@ -189,6 +189,21 @@ void NeutrinoDISCrossSectionsFromTables::ReadText(std::string root){
   // declare the object as initialized;
   is_init = true;
 }
+
+std::vector<double> NeutrinoDISCrossSectionsFromTables::GetRawTotalXsec(std::string inttype, int nutypeindex, int flavorindex)
+{
+   std::vector<double> xsec;
+   unsigned int data_e_size = logE_data_range.size();
+   xsec.resize(data_e_size);
+   for (unsigned int e1 = 0; e1 < data_e_size; e1++) {
+      if (inttype == "CC") {
+         xsec[e1] = s_CC_data[nutypeindex][flavorindex][e1];
+      } else {
+         xsec[e1] = s_NC_data[nutypeindex][flavorindex][e1];
+      }
+   }
+   return xsec;
+}
   
 NeutrinoDISCrossSectionsFromTables::NeutrinoDISCrossSectionsFromTables():
   NeutrinoDISCrossSectionsFromTables(XSECTION_LOCATION "csms.h5"){
