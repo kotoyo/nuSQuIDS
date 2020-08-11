@@ -899,22 +899,34 @@ void nuSQUIDS::GetCrossSections(){
         throw std::runtime_error(ss.str());
       }
     };
-
+    
+//     std::cout << "Looking up cross sections. . . ";
+//     std::cout.flush();
+//     std::chrono::high_resolution_clock::time_point t1, t2;
+//     t1 = std::chrono::high_resolution_clock::now();
     for(unsigned int neutype = 0; neutype < nrhos; neutype++){
       for(unsigned int flv = 0; flv < numneu; flv++){
         for(unsigned int e1 = 0; e1 < ne; e1++){
           // differential cross sections
           for(unsigned int e2 = 0; e2 < e1; e2++){
-            dsignudE_NC[neutype][flv][e1][e2] = ncs->SingleDifferentialCrossSection(E_range[e1],E_range[e2],static_cast<NeutrinoCrossSections::NeutrinoFlavor>(flv),neutype_xs_dict[neutype],NeutrinoCrossSections::NC)*cm2GeV;
+            dsignudE_NC[neutype][flv][e1][e2] = ncs->AverageSingleDifferentialCrossSection(E_range[e1],E_range[e2],E_range[e2+1],(NeutrinoCrossSections::NeutrinoFlavor)flv,neutype_xs_dict[neutype],NeutrinoCrossSections::NC)*cm2GeV;
             validateCrossSection(dsignudE_NC[neutype][flv][e1][e2],cm2GeV,"NC",true,E_range[e1],E_range[e2],flv);
-            dsignudE_CC[neutype][flv][e1][e2] = ncs->SingleDifferentialCrossSection(E_range[e1],E_range[e2],static_cast<NeutrinoCrossSections::NeutrinoFlavor>(flv),neutype_xs_dict[neutype],NeutrinoCrossSections::CC)*cm2GeV;
+            dsignudE_CC[neutype][flv][e1][e2] = ncs->AverageSingleDifferentialCrossSection(E_range[e1],E_range[e2],E_range[e2+1],(NeutrinoCrossSections::NeutrinoFlavor)flv,neutype_xs_dict[neutype],NeutrinoCrossSections::CC)*cm2GeV;
             validateCrossSection(dsignudE_CC[neutype][flv][e1][e2],cm2GeV,"CC",true,E_range[e1],E_range[e2],flv);
           }
           // total cross sections
-          int_struct->sigma_CC[neutype][flv][e1] = ncs->TotalCrossSection(E_range[e1],static_cast<NeutrinoCrossSections::NeutrinoFlavor>(flv),neutype_xs_dict[neutype],NeutrinoCrossSections::CC)*cm2;
-          validateCrossSection(int_struct->sigma_CC[neutype][flv][e1],cm2,"CC",false,E_range[e1],0,flv);
-          int_struct->sigma_NC[neutype][flv][e1] = ncs->TotalCrossSection(E_range[e1],static_cast<NeutrinoCrossSections::NeutrinoFlavor>(flv),neutype_xs_dict[neutype],NeutrinoCrossSections::NC)*cm2;
-          validateCrossSection(int_struct->sigma_NC[neutype][flv][e1],cm2,"NC",false,E_range[e1],0,flv);
+          if(e1<ne-1){
+            int_struct->sigma_CC[neutype][flv][e1] = ncs->AverageTotalCrossSection(E_range[e1],E_range[e1+1],(NeutrinoCrossSections::NeutrinoFlavor)flv,neutype_xs_dict[neutype],NeutrinoCrossSections::CC)*cm2;
+          } else {
+            int_struct->sigma_CC[neutype][flv][e1] = ncs->TotalCrossSection(E_range[e1],static_cast<NeutrinoCrossSections::NeutrinoFlavor>(flv),neutype_xs_dict[neutype],NeutrinoCrossSections::CC)*cm2;
+            validateCrossSection(int_struct->sigma_CC[neutype][flv][e1],cm2,"CC",false,E_range[e1],0,flv);
+          }
+          if(e1<ne-1) {
+            int_struct->sigma_NC[neutype][flv][e1] = ncs->AverageTotalCrossSection(E_range[e1],E_range[e1+1],(NeutrinoCrossSections::NeutrinoFlavor)flv,neutype_xs_dict[neutype],NeutrinoCrossSections::NC)*cm2;
+          } else {
+            int_struct->sigma_NC[neutype][flv][e1] = ncs->TotalCrossSection(E_range[e1],static_cast<NeutrinoCrossSections::NeutrinoFlavor>(flv),neutype_xs_dict[neutype],NeutrinoCrossSections::NC)*cm2;
+            validateCrossSection(int_struct->sigma_NC[neutype][flv][e1],cm2,"NC",false,E_range[e1],0,flv);
+          }
         }
       }
     }
@@ -948,7 +960,7 @@ void nuSQUIDS::GetCrossSections(){
       for(unsigned int e1 = 0; e1 < ne; e1++){
         int_struct->sigma_GR[e1] = gr_cs.TotalCrossSection(E_range[e1],NeutrinoCrossSections::electron,NeutrinoCrossSections::antineutrino,NeutrinoCrossSections::GR)*cm2;
         for(unsigned int e2 = 0; e2 < e1; e2++){
-          dsignudE_GR[e1][e2] = gr_cs.SingleDifferentialCrossSection(E_range[e1],E_range[e2],NeutrinoCrossSections::electron,NeutrinoCrossSections::antineutrino,NeutrinoCrossSections::GR)*cm2GeV;
+          dsignudE_GR[e1][e2] = gr_cs.AverageSingleDifferentialCrossSection(E_range[e1],E_range[e2],E_range[e2+1],NeutrinoCrossSections::electron,NeutrinoCrossSections::antineutrino,NeutrinoCrossSections::GR)*cm2GeV;
         }
       }
       for(unsigned int e1 = 0; e1 < ne; e1++){
@@ -979,6 +991,10 @@ void nuSQUIDS::GetCrossSections(){
           }
       }
     }
+    
+//     t2 = std::chrono::high_resolution_clock::now();
+//     double time=std::chrono::duration_cast<std::chrono::duration<double>>(t2 - t1).count();
+//     std::cout << time << " seconds" << std::endl;
 }
 
 void nuSQUIDS::Set_Body(std::shared_ptr<Body> body_in){
@@ -2192,21 +2208,46 @@ void nuSQUIDS::ReadStateHDF5(std::string str,std::string grp,std::string cross_s
     }
 
     // dNdE_tau_all,dNdE_tau_lep
-    hsize_t dNdEtaudim[3];
-    H5LTget_dataset_info(xs_grp,"dNdEtauall", dNdEtaudim,nullptr,nullptr);
+    int tau_spectra_rank;
+    H5LTget_dataset_ndims(xs_grp,"dNdEtauall",&tau_spectra_rank);
+    if(tau_spectra_rank == 3){
+      // taking account polarization of taus spectra
+      hsize_t dNdEtaudim[3];
+      H5LTget_dataset_info(xs_grp,"dNdEtauall", dNdEtaudim,nullptr,nullptr);
 
-    std::unique_ptr<double[]> dNdEtauall(new double[dNdEtaudim[0]*dNdEtaudim[1]*dNdEtaudim[2]]);
-    H5LTread_dataset_double(xs_grp,"dNdEtauall", dNdEtauall.get());
-    std::unique_ptr<double[]> dNdEtaulep(new double[dNdEtaudim[0]*dNdEtaudim[1]*dNdEtaudim[2]]);
-    H5LTread_dataset_double(xs_grp,"dNdEtaulep", dNdEtaulep.get());
+      std::unique_ptr<double[]> dNdEtauall(new double[dNdEtaudim[0]*dNdEtaudim[1]*dNdEtaudim[2]]);
+      H5LTread_dataset_double(xs_grp,"dNdEtauall", dNdEtauall.get());
+      std::unique_ptr<double[]> dNdEtaulep(new double[dNdEtaudim[0]*dNdEtaudim[1]*dNdEtaudim[2]]);
+      H5LTread_dataset_double(xs_grp,"dNdEtaulep", dNdEtaulep.get());
 
-    for(unsigned int rho = 0; rho < nrhos; rho++){
-      for( unsigned int e1 = 0; e1 < ne; e1++){
-          for( unsigned int e2 = 0; e2 < e1; e2++){
-            int_struct->dNdE_tau_all[rho][e1][e2] = dNdEtauall[rho*(ne*ne) + e1*ne + e2];
-            int_struct->dNdE_tau_lep[rho][e1][e2] = dNdEtaulep[rho*(ne*ne) + e1*ne + e2];
-          }
+      for(unsigned int rho = 0; rho < nrhos; rho++){
+        for( unsigned int e1 = 0; e1 < ne; e1++){
+            for( unsigned int e2 = 0; e2 < e1; e2++){
+              int_struct->dNdE_tau_all[rho][e1][e2] = dNdEtauall[rho*(ne*ne) + e1*ne + e2];
+              int_struct->dNdE_tau_lep[rho][e1][e2] = dNdEtaulep[rho*(ne*ne) + e1*ne + e2];
+            }
+        }
       }
+    } else if (tau_spectra_rank == 2) {
+      // averaging out taus polarization spectra -- LEGACY
+      hsize_t dNdEtaudim[2];
+      H5LTget_dataset_info(xs_grp,"dNdEtauall", dNdEtaudim,nullptr,nullptr);
+
+      std::unique_ptr<double[]> dNdEtauall(new double[dNdEtaudim[0]*dNdEtaudim[1]]);
+      H5LTread_dataset_double(xs_grp,"dNdEtauall", dNdEtauall.get());
+      std::unique_ptr<double[]> dNdEtaulep(new double[dNdEtaudim[0]*dNdEtaudim[1]]);
+      H5LTread_dataset_double(xs_grp,"dNdEtaulep", dNdEtaulep.get());
+
+      for(unsigned int rho = 0; rho < nrhos; rho++){
+        for( unsigned int e1 = 0; e1 < ne; e1++){
+            for( unsigned int e2 = 0; e2 < e1; e2++){
+              int_struct->dNdE_tau_all[rho][e1][e2] = dNdEtauall[e1*ne + e2];
+              int_struct->dNdE_tau_lep[rho][e1][e2] = dNdEtaulep[e1*ne + e2];
+            }
+        }
+      }
+    } else {
+      throw std::runtime_error("nuSQUIDS::ReadStateHDF5: Error. Misformed HDF5 files when trying to deserialize tau decay distributions.");
     }
 
     nc_factors.resize(std::vector<size_t>{nrhos,3,ne});

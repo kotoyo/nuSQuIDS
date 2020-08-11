@@ -25,11 +25,14 @@
 
 BOOST_PYTHON_MODULE(nuSQUIDSpy)
 {
-
   // import numpy array definitions
   //np::initialize();
-  import_array();
   import_ufunc();
+#if PY_VERSION_HEX >= 0x03000000
+  import_array1();
+#else
+  import_array();
+#endif
 
   enum_<GSL_STEP_FUNCTIONS>("GSL_STEP_FUNCTIONS")
     .value("GSL_STEP_RK2",GSL_STEP_RK2)
@@ -151,9 +154,8 @@ BOOST_PYTHON_MODULE(nuSQUIDSpy)
     .def(init<std::string>())
     .def("TotalCrossSection",&NeutrinoDISCrossSectionsFromTables::TotalCrossSection)
     .def("SingleDifferentialCrossSection",&NeutrinoDISCrossSectionsFromTables::SingleDifferentialCrossSection)
-    .def("GetNumE",&NeutrinoDISCrossSectionsFromTables::GetNumE)
-    .def("GetEmin",&NeutrinoDISCrossSectionsFromTables::GetEmax)
-    .def("IsInit",&NeutrinoDISCrossSectionsFromTables::IsInit)
+    .def("GetEmin",&NeutrinoDISCrossSectionsFromTables::GetEmin)
+    .def("GetEmax",&NeutrinoDISCrossSectionsFromTables::GetEmax)
     .def("WriteHDF",&NeutrinoDISCrossSectionsFromTables::WriteHDF)
     .def("WriteText",&NeutrinoDISCrossSectionsFromTables::WriteText)
     .def("GetLogEEnergyNodes",&NeutrinoDISCrossSectionsFromTables::GetLogEEnergyNodes)
@@ -296,6 +298,7 @@ BOOST_PYTHON_MODULE(nuSQUIDSpy)
   {
     scope outer
     = class_<Sun, bases<Body>, std::shared_ptr<Sun> >("Sun")
+    .def(init<std::string>())
     ;
 
     class_<Sun::Track, std::shared_ptr<Sun::Track> >("Track", init<double>())
@@ -314,6 +317,7 @@ BOOST_PYTHON_MODULE(nuSQUIDSpy)
   {
     scope outer
     = class_<SunASnu, bases<Body>, std::shared_ptr<SunASnu> >("SunASnu")
+    .def(init<std::string>())
     ;
 
     class_<SunASnu::Track, std::shared_ptr<SunASnu::Track> >("Track", init<double>())
@@ -336,6 +340,7 @@ BOOST_PYTHON_MODULE(nuSQUIDSpy)
     ;
 
     class_<EarthAtm::Track, std::shared_ptr<EarthAtm::Track> >("Track", init<double>())
+    .def(init<double,double>())
     .def("GetInitialX",&EarthAtm::Track::GetInitialX)
     .def("GetFinalX",&EarthAtm::Track::GetFinalX)
     .def("GetX",&EarthAtm::Track::GetX)
