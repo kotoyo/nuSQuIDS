@@ -92,12 +92,20 @@ struct marray_from_python{
     //accept only numpy arrays
     if(!PyArray_Check(obj_ptr))
       return(NULL);
+    // Analogously to what is described in
+    // https://docs.python.org/3/c-api/intro.html#reference-counts,
+    // the call below always increases the reference count of the object by one and we 
+    // are left with the responsibility to decrease the reference count when we are done
+    // with it.
     PyArrayObject* numpy_array=PyArray_GETCONTIGUOUS((PyArrayObject*)obj_ptr);
     unsigned int array_dim = PyArray_NDIM(numpy_array);
     //require matching dimensions
-    if(array_dim!=Dim)
+    if(array_dim!=Dim){
+      Py_XDECREF(numpy_array);
       return(NULL);
+    }
     NPY_TYPES type = (NPY_TYPES) PyArray_DESCR(numpy_array)->type_num;
+    Py_XDECREF(numpy_array);
     //require a sane type
     switch(type){
       case NPY_BOOL:
@@ -115,7 +123,6 @@ struct marray_from_python{
       default:
         return(NULL);
     }
-
     return(obj_ptr);
   }
 
@@ -184,6 +191,7 @@ struct marray_from_python{
       }
     } while(iternext(iter));
     NpyIter_Deallocate(iter);
+    Py_XDECREF(numpy_array);
   }
 };
 
@@ -301,7 +309,8 @@ template<typename BaseType, typename = typename std::enable_if<std::is_base_of<n
       class_object->def("EvalMassAtNode",(double(BaseType::*)(unsigned int,unsigned int,unsigned int) const)&BaseType::EvalMassAtNode);
       class_object->def("EvalFlavorAtNode",(double(BaseType::*)(unsigned int,unsigned int,unsigned int) const)&BaseType::EvalFlavorAtNode);
       class_object->def("GetHamiltonian",&BaseType::GetHamiltonian);
-      //class_object->def("GetState",&BaseType::GetState);
+      class_object->def("GetState",(const squids::SU_vector&(BaseType::*)(unsigned int))&BaseType::GetState, return_value_policy<copy_const_reference>());
+      class_object->def("GetState",(const squids::SU_vector&(BaseType::*)(unsigned int, unsigned int))&BaseType::GetState, return_value_policy<copy_const_reference>());
       class_object->def("Set_h_min",&BaseType::Set_h_min);
       class_object->def("Set_h_max",&BaseType::Set_h_max);
       class_object->def("Set_h",&BaseType::Set_h);
