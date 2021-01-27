@@ -115,6 +115,7 @@ std::tuple<AkimaSpline,double,double> NeutrinoDISCrossSectionsFromTables::read1D
 		en.push_back(log10(rawData[i][0]*GeV)); //note conversion to eV
 		sigma.push_back(log10(rawData[i][1]));
 	}
+        logE_data_range = en;
 	double emin=rawData[0][0]*GeV;
 	double emax=rawData[nEntries-1][0]*GeV;
 	return std::make_tuple(AkimaSpline(en,sigma),emin,emax);
@@ -548,7 +549,7 @@ void NeutrinoDISCrossSectionsFromTables_V1::ReadText(std::string root){
   is_init = true;
 }
 
-std::vector<double> NeutrinoDISCrossSectionsFromTables::GetRawTotalXsec(std::string inttype, int nutypeindex, int flavorindex)
+std::vector<double> NeutrinoDISCrossSectionsFromTables_V1::GetRawTotalXsec(std::string inttype, int nutypeindex, int flavorindex)
 {
    std::vector<double> xsec;
    unsigned int data_e_size = logE_data_range.size();

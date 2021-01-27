@@ -307,6 +307,8 @@ protected:
 	
 	///\brief Check whether a path refers to an HDF5 file
 	bool isHDF(const std::string& path);
+
+        std::vector<double> logE_data_range;
 	
 public:
 	///Construct a set of cross sections from a default set of tables
@@ -425,10 +427,13 @@ public:
 	///\param path the path to which the output should be written
 	void WriteHDF(const std::string& path, unsigned int compressionLevel=0) const;
 
-  /// \brief Returns the minimum energy in [eV]
-  double GetEmin() const {return Emin;}
-  /// \brief Returns the maximum energy in [eV]
-  double GetEmax() const {return Emax;}
+        /// \brief Returns the minimum energy in [eV]
+        double GetEmin() const {return Emin;}
+        /// \brief Returns the maximum energy in [eV]
+        double GetEmax() const {return Emax;}
+        /// \brief Get energy nodes (logE_data_range, unit is log(E/GeV))
+        std::vector<double> GetLogEEnergyNodes() { return logE_data_range; }
+
 };
 
 /// \class NeutrinoGRCrossSection

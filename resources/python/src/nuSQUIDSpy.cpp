@@ -159,7 +159,18 @@ BOOST_PYTHON_MODULE(nuSQUIDSpy)
     .def("WriteHDF",&NeutrinoDISCrossSectionsFromTables::WriteHDF)
     .def("WriteText",&NeutrinoDISCrossSectionsFromTables::WriteText)
     .def("GetLogEEnergyNodes",&NeutrinoDISCrossSectionsFromTables::GetLogEEnergyNodes)
-    .def("GetRawTotalXsec",&NeutrinoDISCrossSectionsFromTables::GetRawTotalXsec)
+  ;
+
+  class_<NeutrinoDISCrossSectionsFromTables_V1, bases<NeutrinoCrossSections>, std::shared_ptr<NeutrinoDISCrossSectionsFromTables_V1>, boost::noncopyable>("NeutrinoDISCrossSectionsFromTables_V1")
+    .def(init<std::string>())
+    .def("TotalCrossSection",&NeutrinoDISCrossSectionsFromTables_V1::TotalCrossSection)
+    .def("SingleDifferentialCrossSection",&NeutrinoDISCrossSectionsFromTables_V1::SingleDifferentialCrossSection)
+    .def("GetEmin",&NeutrinoDISCrossSectionsFromTables_V1::GetEmin)
+    .def("GetEmax",&NeutrinoDISCrossSectionsFromTables_V1::GetEmax)
+    .def("WriteHDF",&NeutrinoDISCrossSectionsFromTables_V1::WriteHDF)
+    .def("WriteText",&NeutrinoDISCrossSectionsFromTables_V1::WriteText)
+    .def("GetLogEEnergyNodes",&NeutrinoDISCrossSectionsFromTables_V1::GetLogEEnergyNodes)
+    .def("GetRawTotalXsec",&NeutrinoDISCrossSectionsFromTables_V1::GetRawTotalXsec)
   ;
 
   class_<TauDecaySpectra, std::shared_ptr<TauDecaySpectra>, boost::noncopyable>("TauDecaySpectra")
